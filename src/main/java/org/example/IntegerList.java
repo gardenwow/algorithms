@@ -6,54 +6,53 @@ import org.example.Exception.NullItemException;
 import org.example.Exception.StringFullException;
 import org.example.interf.StringList;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
-public class StringListImpl implements StringList {
-    private final String[] strings;
+public class IntegerList {
+    private final Integer[] integers;
     private int size;
 
-    public StringListImpl() {
-        strings = new String[20];
+    public IntegerList() {
+        integers = new Integer[20];
     }
 
-    public StringListImpl(int sizeList) {
-        strings = new String[sizeList];
+    public IntegerList(int sizeList) {
+        integers = new Integer[sizeList];
     }
 
-    @Override
-    public String add(String item) {
+
+    public Integer add(Integer item) {
         validateItem(item);
         validateSize();
-        strings[size++] = item;
+        integers[size++] = item;
         return item;
     }
 
-    @Override
-    public String add(int index, String item) {
+
+    public Integer add(int index, Integer item) {
         validateItem(item);
         validateIndex(index);
         validateSize();
         if (index == size) {
-            strings[size++] = item;
+            integers[size++] = item;
         } else {
-            System.arraycopy(strings, index, strings, index + 1, size - index);
-            strings[index] = item;
+            System.arraycopy(integers, index, integers, index + 1, size - index);
+            integers[index] = item;
             size++;
         }
         return item;
     }
 
-    @Override
-    public String set(int index, String item) {
+
+    public Integer set(int index, Integer item) {
         validateIndex(index);
         validateItem(item);
-        strings[index] = item;
+        integers[index] = item;
         return item;
     }
 
-    @Override
-    public String remove(String item) {
+
+    public Integer remove(Integer item) {
         validateItem(item);
         validateSize();
         int index = indexOf(item);
@@ -61,35 +60,35 @@ public class StringListImpl implements StringList {
             throw new EllementNotFoundExceptions("элемент не найден");
         }
         if (index != size) {
-            System.arraycopy(strings, index + 1, strings, index, size - index);
+            System.arraycopy(integers, index + 1, integers, index, size - index);
         }
         size--;
         return item;
     }
 
-    @Override
-    public String remove(int index) {
+
+    public Integer remove(int index) {
         validateIndex(index);
         if (index == -1) {
             throw new EllementNotFoundExceptions("элемент не найден");
         }
-        String item = strings[index];
+        Integer item = integers[index];
         if (index != size) {
-            System.arraycopy(strings, index + 1, strings, index, size - index);
+            System.arraycopy(integers, index + 1, integers, index, size - index);
         }
         size--;
         return item;
     }
 
-    @Override
-    public boolean contains(String item) {
+
+    public boolean contains(Integer item) {
         return indexOf(item) != -1;
     }
 
-    @Override
-    public int indexOf(String item) {
+
+    public int indexOf(Integer item) {
         for (int i = 0; i < size; i++) {
-            String s = strings[i];
+            Integer s = integers[i];
             if (s.equals(item)) {
                 return i;
             }
@@ -98,10 +97,9 @@ public class StringListImpl implements StringList {
 
     }
 
-    @Override
-    public int lastIndexOf(String item) {
+    public int lastIndexOf(Integer item) {
         for (int i = size - 1; i >= 0; i--) {
-            String s = strings[i];
+            Integer s = integers[i];
             if (s.equals(item)) {
                 return i;
             }
@@ -110,47 +108,47 @@ public class StringListImpl implements StringList {
         return -1;
     }
 
-    @Override
-    public String get(int index) {
+
+    public Integer get(int index) {
         validateIndex(index);
-        return strings[index];
+        return integers[index];
 
     }
 
-    @Override
+
     public boolean equals(StringList otherList) {
         return Arrays.equals(this.toArray(), otherList.toArray());
     }
 
-    @Override
+
     public int size() {
         return size;
     }
 
-    @Override
+
     public boolean isEmpty() {
         return size == 0;
     }
 
-    @Override
+
     public void clear() {
         size = 0;
 
     }
 
-    @Override
-    public String[] toArray() {
-        return Arrays.copyOf(strings, size);
+
+    public Integer[] toArray() {
+        return Arrays.copyOf(integers, size);
     }
 
-    private void validateItem(String item) {
+    private void validateItem(Integer item) {
         if (item == null) {
             throw new NullItemException("пустая строка");
         }
     }
 
     private void validateSize() {
-        if (size == strings.length) {
+        if (size == integers.length) {
             throw new StringFullException("вы заполнили размер");
 
         }
@@ -164,7 +162,45 @@ public class StringListImpl implements StringList {
 
     @Override
     public String toString() {
-        return Arrays.toString(strings);
+        return "IntegerList{" +
+                "integers=" + Arrays.toString(integers) +
+                '}';
+    }
+
+    public static void bublesSort(Integer[] arr){
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr.length -1 -i; j++) {
+                if (arr[j]> arr[j+1]){
+                    swapElements(arr, j, j+1);
+
+                }
+            }
+        }
 
     }
+    private static void swapElements(Integer[] arr, int indexA, int indexB) {
+        int tmp = arr[indexA];
+        arr[indexA] = arr[indexB];
+        arr[indexB] = tmp;
+    }
+    public static boolean biSort(Integer[] arr, int element) {
+        int min = 0;
+        int max = arr.length - 1;
+
+        while (min <= max) {
+            int mid = (min + max) / 2;
+
+            if (element == arr[mid]) {
+                return true;
+            }
+
+            if (element < arr[mid]) {
+                max = mid - 1;
+            } else {
+                min = mid + 1;
+            }
+        }
+        return false;
+    }
+
 }
