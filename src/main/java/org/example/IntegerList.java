@@ -8,8 +8,9 @@ import org.example.interf.StringList;
 
 import java.util.Arrays;
 
+
 public class IntegerList {
-    private final Integer[] integers;
+    private Integer[] integers;
     private int size;
 
     public IntegerList() {
@@ -82,7 +83,10 @@ public class IntegerList {
 
 
     public boolean contains(Integer item) {
-        return indexOf(item) != -1;
+        Integer[] itemCopy = toArray();
+        bublesSort(itemCopy);
+        return biSort(itemCopy, item);
+
     }
 
 
@@ -149,6 +153,7 @@ public class IntegerList {
 
     private void validateSize() {
         if (size == integers.length) {
+            grow();
             throw new StringFullException("вы заполнили размер");
 
         }
@@ -167,23 +172,40 @@ public class IntegerList {
                 '}';
     }
 
-    public static void bublesSort(Integer[] arr){
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr.length -1 -i; j++) {
-                if (arr[j]> arr[j+1]){
-                    swapElements(arr, j, j+1);
+    public void bublesSort(Integer[] arr) {
+        quickSort(arr, 0, arr.length-1);
+    }
 
-                }
+    private void quickSort(Integer[] arr, int begin, int end){
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
+
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
+        }
+    }
+    private Integer partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
             }
         }
 
+        swapElements(arr, i + 1, end);
+        return i + 1;
     }
-    private static void swapElements(Integer[] arr, int indexA, int indexB) {
-        int tmp = arr[indexA];
-        arr[indexA] = arr[indexB];
-        arr[indexB] = tmp;
+    private void swapElements(Integer[] arr, int left, int right) {
+        int temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
     }
-    public static boolean biSort(Integer[] arr, int element) {
+
+    public boolean biSort(Integer[] arr, int element) {
         int min = 0;
         int max = arr.length - 1;
 
@@ -201,6 +223,9 @@ public class IntegerList {
             }
         }
         return false;
+    }
+    public void grow(){
+        integers = Arrays.copyOf(integers, size + size / 2);
     }
 
 }
